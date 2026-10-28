@@ -2,8 +2,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { isConfigured, portfolio } from './data'
 import styles from './App.module.css'
 
-const sections = ['home', 'about', 'experience', 'projects', 'github', 'contact']
-const navLabels = { home: 'Home', about: 'About', experience: 'Experience', projects: 'Work', github: 'GitHub', contact: 'Contact' }
+const sections = ['home', 'about', 'experience', 'projects', 'achievements', 'testimonials', 'github', 'contact']
+const navLabels = { home: 'Home', about: 'About', experience: 'Experience', projects: 'Work', achievements: 'Wins', testimonials: 'Kind Words', github: 'GitHub', contact: 'Contact' }
 const techIcons = {
   HTML: 'html5/html5-original.svg',
   CSS: 'css3/css3-original.svg',
@@ -232,6 +232,40 @@ function Projects() {
   </div></section>
 }
 
+function Achievements() {
+  const items = portfolio.achievements || []
+  return <section id="achievements" className={`${styles.section} ${styles.achievementsSection}`}><div className={styles.container}>
+    <SectionHeading number="04" label="RECOGNITION" title={<>Milestones along the <em>way.</em></>} aside="Moments of growth and acknowledgment." />
+    {items.length ? <div className={styles.achievementsGrid}>
+      {items.map((item) => <article key={item.id} className={`${styles.achievementCard} ${styles.reveal}`}>
+        <div className={styles.achievementYear}>{item.year}</div>
+        <div className={styles.achievementContent}>
+          <h3>{item.title}</h3>
+          <p className={styles.achievementOrg}>{item.organization}</p>
+          <p className={styles.achievementDesc}>{item.description}</p>
+        </div>
+      </article>)}
+    </div> : <div className={styles.emptyPanel}>Achievements can be added in <code>src/data.js</code>.</div>}
+  </div></section>
+}
+
+function Testimonials() {
+  const items = (portfolio.testimonials || []).filter((item) => !item.draft)
+  if (!items.length) return null
+  return <section id="testimonials" className={`${styles.section} ${styles.testimonialsSection}`}><div className={styles.container}>
+    <SectionHeading number="05" label="KIND WORDS" title={<>What people <em>say.</em></>} aside="Feedback from clients, colleagues, and collaborators." />
+    <div className={styles.testimonialsGrid}>
+      {items.map((item) => <article key={item.id} className={`${styles.testimonialCard} ${styles.reveal}`}>
+        <blockquote className={styles.quote}>"{item.quote}"</blockquote>
+        <div className={styles.attribution}>
+          <span className={styles.quoteName}>{item.name}</span>
+          <span className={styles.quoteRole}>{item.role}</span>
+        </div>
+      </article>)}
+    </div>
+  </div></section>
+}
+
 const cacheKey = (username, type) => `portfolio.github.${username}.${type}`
 function readCache(key) {
   try { return JSON.parse(localStorage.getItem(key))?.data ?? null } catch { return null }
@@ -333,7 +367,7 @@ function GitHubSection() {
   }, [configured, username])
 
   return <section id="github" className={`${styles.section} ${styles.githubSection}`}><div className={styles.container}>
-    <SectionHeading number="04" label="ON GITHUB" title={<>A little more <em>behind the code.</em></>} aside="A public profile and activity feed, with private-inclusive contribution totals when connected." />
+    <SectionHeading number="06" label="ON GITHUB" title={<>A little more <em>behind the code.</em></>} aside="A public profile and activity feed, with private-inclusive contribution totals when connected." />
     {!configured ? <div className={styles.githubUnconfigured}><div className={styles.githubSymbol}><Icon name="github" size={32} /></div><div><h3>Connect the dots.</h3><p>Add your GitHub username in <code>src/data.js</code> to see your real profile, contributions and recent activity here.</p></div></div> : <>
       {error && <div className={styles.apiNotice} role="status">{error} {profile ? 'Showing the last saved profile.' : 'Please try again later.'}</div>}
       {loading && !profile ? <div className={styles.profileSkeleton} aria-label="Loading GitHub profile"><span /><div><i /><i /><i /></div></div> : profile ? <GitHubProfile profile={profile} username={username} /> : <div className={styles.emptyPanel}>GitHub profile unavailable. <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer">Open GitHub ↗</a></div>}
@@ -380,7 +414,7 @@ function Contact() {
   }
 
   return <section id="contact" className={`${styles.section} ${styles.contactSection}`}><div className={styles.container}>
-    <SectionHeading number="05" label="SAY HELLO" title={<>Let's make something <em>matter.</em></>} />
+    <SectionHeading number="07" label="SAY HELLO" title={<>Let's make something <em>matter.</em></>} />
     <div className={styles.contactGrid}><div className={`${styles.contactIntro} ${styles.reveal}`}><p>Have a project in mind, a question, or just want to talk shop? I'd love to hear from you.</p><div className={styles.contactDirect}><span>EMAIL ME DIRECTLY</span>{portfolio.email ? <a href={`mailto:${portfolio.email}`}>{portfolio.email} <Icon name="external" size={17} /></a> : <span className={styles.missingEmail}>Add your email in src/data.js</span>}</div><div className={styles.contactSocial}><span>ELSEWHERE</span><Socials /></div></div>
       <form className={`${styles.contactForm} ${styles.reveal}`} onSubmit={submit} noValidate><div className={styles.formHeader}><span>NEW MESSAGE</span><span>↗</span></div><div className={styles.formRow}><label>Your name<input type="text" name="name" autoComplete="name" placeholder="How should I call you?" value={form.name} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'name-error' : undefined} onChange={(e) => setForm({ ...form, name: e.target.value })} />{errors.name && <small id="name-error" className={styles.fieldError}>{errors.name}</small>}</label><label>Email address<input type="email" name="email" autoComplete="email" placeholder="you@example.com" value={form.email} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'email-error' : undefined} onChange={(e) => setForm({ ...form, email: e.target.value })} />{errors.email && <small id="email-error" className={styles.fieldError}>{errors.email}</small>}</label></div><label>Your message<textarea name="message" rows="5" placeholder="Tell me a little about what you're thinking..." value={form.message} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? 'message-error' : undefined} onChange={(e) => setForm({ ...form, message: e.target.value })} />{errors.message && <small id="message-error" className={styles.fieldError}>{errors.message}</small>}</label><div className={styles.formBottom}><span>{canSubmit ? (portfolio.formEndpoint ? 'I usually respond as soon as I can.' : 'Opens your email app to send.') : 'Add an email or form endpoint in src/data.js to enable messaging.'}</span><button className={styles.primaryButton} type="submit" disabled={!canSubmit || sending}>{sending ? 'Sending...' : 'Send message'} <Icon name="arrow" size={17} /></button></div></form>
     </div>
@@ -413,7 +447,7 @@ function App() {
     document.documentElement.classList.add('has-motion')
     return () => { observer.disconnect(); document.documentElement.classList.remove('has-motion') }
   }, [])
-  return <div className={styles.app}><Navbar theme={theme} setTheme={setTheme} /><main><Hero /><About /><Experience /><Projects /><GitHubSection /><Contact /></main><Footer /></div>
+  return <div className={styles.app}><Navbar theme={theme} setTheme={setTheme} /><main><Hero /><About /><Experience /><Projects /><Achievements /><Testimonials /><GitHubSection /><Contact /></main><Footer /></div>
 }
 
 export default App

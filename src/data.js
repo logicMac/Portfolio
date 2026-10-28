@@ -136,6 +136,44 @@ export const portfolio = {
     },
     { id: 'mobile-2', draft: true, title: 'CodeCollective app two', client: 'CodeCollective', description: '', stack: ['Flutter', 'Dart'], image: '', liveUrl: '' },
   ],
+  achievements: [
+    {
+      id: 'capstone',
+      title: 'Capstone Project Excellence',
+      organization: 'Matutum View Baptist Academy',
+      year: '2025',
+      description: 'Successfully delivered a comprehensive enrollment and learning management system with a mobile companion app.',
+    },
+    {
+      id: 'internship',
+      title: 'DevOps Internship',
+      organization: 'CodeCollective',
+      year: '2026',
+      description: 'Lead developer role with hands-on experience in containerization, CI/CD automation, and mobile app development.',
+    },
+    {
+      id: 'client-work',
+      title: 'Commissioned Software Delivery',
+      organization: 'Multiple Clients',
+      year: '2024 - Present',
+      description: 'Built and deployed production systems for schools, municipalities, and organizations across the region.',
+    },
+  ],
+  testimonials: [
+    {
+      id: 'testimonial-1',
+      quote: 'Add a testimonial here from a client, professor, or colleague.',
+      name: 'Name',
+      role: 'Role / Organization',
+    },
+    {
+      id: 'testimonial-2',
+      draft: true,
+      quote: 'This testimonial is hidden until you set draft: false.',
+      name: 'Name',
+      role: 'Role / Organization',
+    },
+  ],
 }
 
 export const isConfigured = (value) => Boolean(value && !value.startsWith('['))
